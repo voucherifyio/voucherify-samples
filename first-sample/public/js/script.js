@@ -2,6 +2,8 @@ window.addEventListener("load", () => {
   const cartSummary = document.getElementById("cartSummary");
   const checkoutButton = document.getElementById("checkout-button");
   const promotionHolder = document.getElementById("promotion-holder");
+  const voucherValue = document.getElementById('voucherCode');
+
   let items = [
     {
       productName: "Johan & Nystrom Caravan",
@@ -61,16 +63,15 @@ window.addEventListener("load", () => {
     });
     const data = await response.json();
     if (data.message === "Voucher granted" && data.status === "success") {
-      console.log(data)
       promotionHolder.innerHTML = null;
       return { amount: data.amount, campaign: data.campaign };
     }
     if (data.status === "error") {
-      console.log(data.message)
       promotionHolder.innerHTML = `<h5 id="error-message">Voucher code incorrect</h5>`;
       return false;
     }
   }
+
   async function redeemVoucherCode(voucherCode) {
     if (items.reduce((a, b) => a + b.quantity, 0) === 0) {
       promotionHolder.innerHTML = `<h5 id="error-message">No items in basket!</h5>`;
@@ -92,7 +93,6 @@ window.addEventListener("load", () => {
     });
     const data = await response.json();
     if (data.message === "Voucher granted" && data.status === "success") {
-      console.log(data)
       promotionHolder.innerHTML = null;
       return { amount: data.amount, campaign: data.campaign };
     }
@@ -103,24 +103,25 @@ window.addEventListener("load", () => {
   }
 
   checkoutButton.addEventListener("click", () => {
-    redeemVoucherCode(document.getElementById("voucherCode").value).then(
+    redeemVoucherCode(voucherValue.value).then(
       (result) => {
         if (result.amount) {
+          checkoutButton.innerHTML = `<p>Thank you!</p>`
           promotions = result.amount / 100;
           grandTotal = addProductPrices(items) - promotions;
           grandTotalSpan.innerHTML = `$${grandTotal.toFixed(2)}`;
           allDiscountsSpan.innerHTML = `-$${promotions.toFixed(2)}`;
           promotionHolder.innerHTML = `<h5>${
-            result.campaign || ''
-          }<span>(-${promotions.toFixed(2)})</span></h5>
+            result.campaign ? result.campaign : ''
+          }<span>-${promotions.toFixed(2)}$ OFF</span></h5>
             <span>-$${promotions.toFixed(2)}</span>`;
         }
       }
-    );
+    )
   });
 
   buttonToCheckVoucherCode[0].addEventListener("click", () => {
-    checkVoucherCode(document.getElementById("voucherCode").value).then(
+    checkVoucherCode(voucherValue.value).then(
       (result) => {
         if (result.amount) {
           promotions = result.amount / 100;
@@ -128,12 +129,12 @@ window.addEventListener("load", () => {
           grandTotalSpan.innerHTML = `$${grandTotal.toFixed(2)}`;
           allDiscountsSpan.innerHTML = `-$${promotions.toFixed(2)}`;
           promotionHolder.innerHTML = `<h5>${
-            result.campaign || ''
-          }<span>(-${promotions.toFixed(2)})</span></h5>
+            result.campaign ? result.campaign : ''
+          }<span>-${promotions.toFixed(2)}$ OFF</span></h5>
           <span>-$${promotions.toFixed(2)}</span>`;
         }
       }
-    );
+    )
   });
 
   cartSummary.innerHTML = `<h2>Item summary (4)</h2> ${items

@@ -10,7 +10,6 @@ const client = VoucherifyServerSide({
 
 const express = require('express');
 const bodyParser = require('body-parser');
-
 const app = express();
 
 app.use(bodyParser.json());
@@ -40,20 +39,24 @@ app.post("/check-voucher", (req, res) => {
 
   client.validations.validateVoucher(voucherCode)
   .then(response => {
-    console.log(response)
     if (response.valid) {
+      console.log(response)
       res.status(200).send({
         status: "success",
         message: "Voucher granted",
         amount: response.discount.amount_off,
         campaign: response.campaign ? response.campaign : null
       })
+    } else {
+      res.send({
+        status: "error",
+        message: "Voucher incorrect"
+      })
     }
   })
-  .catch((error) => {
-    console.log(error);
+  .catch(() => {
     res.send({
-      status: 'error',
+      status: "error",
       message: "Voucher incorrect"
     })
   })
@@ -69,12 +72,13 @@ app.post("/redeem-voucher", (req, res) => {
    client.redemptions.redeem(voucherCode)
    .then(response => {
      console.log(response)
-     if (response.valid) {
+     if (response.result) {
+       console.log(response.result)
        res.status(200).send({
         status: "success",
         message: "Voucher granted",
-        amount: response.data.discount.amount_off,
-        campaign: response.data.campaign
+        amount: response.voucher.discount.amount_off,
+        campaign: response.campaign ? response.campaign : null
        })
      }
    })
