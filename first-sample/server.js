@@ -25,7 +25,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.sendFile(process.cwd() + '/public/index.html');
+  res.sendFile(process.cwd() + 'index.html');
 });
 
 
@@ -40,7 +40,6 @@ app.post("/check-voucher", (req, res) => {
   client.validations.validateVoucher(voucherCode)
   .then(response => {
     if (response.valid) {
-      console.log(response)
       res.status(200).send({
         status: "success",
         message: "Voucher granted",
@@ -48,7 +47,7 @@ app.post("/check-voucher", (req, res) => {
         campaign: response.campaign ? response.campaign : null
       })
     } else {
-      res.send({
+      res.status(404).send({
         status: "error",
         message: "Voucher incorrect"
       })
@@ -71,16 +70,19 @@ app.post("/redeem-voucher", (req, res) => {
    }
    client.redemptions.redeem(voucherCode)
    .then(response => {
-     console.log(response)
      if (response.result) {
-       console.log(response.result)
        res.status(200).send({
         status: "success",
         message: "Voucher granted",
         amount: response.voucher.discount.amount_off,
-        campaign: response.campaign ? response.campaign : null
+        campaign: response.voucher.campaign ? response.voucher.campaign : null
        })
-     }
+     } else {
+      res.status(404).send({
+        status: "error",
+        message: "Voucher incorrect"
+      })
+    }
    })
    .catch(() => {
     res.send({

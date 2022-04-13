@@ -3,6 +3,12 @@ window.addEventListener("load", () => {
   const checkoutButton = document.getElementById("checkout-button");
   const promotionHolder = document.getElementById("promotion-holder");
   const voucherValue = document.getElementById('voucherCode');
+  const buttonToCheckVoucherCode = document.getElementsByClassName("checkVoucherCode");
+  const buttonsToAddIncrement = document.getElementsByClassName("increment");
+  const buttonsToAddDecrement = document.getElementsByClassName("decrement");
+  const subtotal = document.querySelector("#subtotal-value");
+  const allDiscountsSpan = document.querySelector("#all-discounts-value");
+  const grandTotalSpan = document.querySelector("#grand-total-value");
 
   let items = [
     {
@@ -39,8 +45,15 @@ window.addEventListener("load", () => {
   let grandTotal = 0;
   let isError = false;
 
-  const buttonToCheckVoucherCode =
-    document.getElementsByClassName("checkVoucherCode");
+
+  voucherValue.addEventListener('input', () => {
+    if (voucherValue.value === '') {
+    checkoutButton.innerHTML = 'Checkout'
+    grandTotalSpan.innerHTML = `$${(grandTotal + promotions).toFixed(2)}`;
+    allDiscountsSpan.innerHTML = 'n/a';
+    promotionHolder.innerHTML = '';
+    }
+  })
 
   async function checkVoucherCode(voucherCode) {
     if (items.reduce((a, b) => a + b.quantity, 0) === 0) {
@@ -158,13 +171,6 @@ window.addEventListener("load", () => {
                    </div>`
     )
     .join("")}`;
-
-  const buttonsToAddIncrement = document.getElementsByClassName("increment");
-  const buttonsToAddDecrement = document.getElementsByClassName("decrement");
-  const subtotal = document.querySelector("#subtotal-value");
-
-  const allDiscountsSpan = document.querySelector("#all-discounts-value");
-  const grandTotalSpan = document.querySelector("#grand-total-value");
 
   for (let i = 0; i < buttonsToAddIncrement.length; i++) {
     buttonsToAddIncrement[i].addEventListener("click", () =>
