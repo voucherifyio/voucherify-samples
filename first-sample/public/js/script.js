@@ -1,63 +1,62 @@
 window.addEventListener("load", () => {
-  const cartSummary = document.getElementById("cartSummary");
-  const checkoutButton = document.getElementById("checkout-button");
-  const promotionHolder = document.getElementById("promotion-holder");
-  const voucherValue = document.getElementById('voucherCode');
-  const buttonToCheckVoucherCode = document.getElementsByClassName("checkVoucherCode");
-  const buttonsToAddIncrement = document.getElementsByClassName("increment");
-  const buttonsToAddDecrement = document.getElementsByClassName("decrement");
-  const subtotal = document.querySelector("#subtotal-value");
-  const allDiscountsSpan = document.querySelector("#all-discounts-value");
-  const grandTotalSpan = document.querySelector("#grand-total-value");
+    const cartSummary = document.getElementById("cartSummary");
+    const checkoutButton = document.getElementById("checkout-button");
+    const promotionHolder = document.getElementById("promotion-holder");
+    const voucherValue = document.getElementById("voucherCode");
+    const buttonToCheckVoucherCode = document.getElementsByClassName("checkVoucherCode");
+    const buttonsToAddIncrement = document.getElementsByClassName("increment");
+    const buttonsToAddDecrement = document.getElementsByClassName("decrement");
+    const subtotal = document.querySelector("#subtotal-value");
+    const allDiscountsSpan = document.querySelector("#all-discounts-value");
+    const grandTotalSpan = document.querySelector("#grand-total-value");
 
-  let items = [
-    {
-      productName: "Johan & Nystrom Caravan",
-      productDescription: "20 oz bag",
-      quantity: 1,
-      price: "26.99",
-      src: "./../../images/johan.jpeg",
-    },
-    {
-      productName: "Illy Arabica",
-      productDescription: "Bestseller 18 oz bag",
-      quantity: 1,
-      price: "21.02",
-      src: "./../../images/illy_arabica.jpeg",
-    },
-    {
-      productName: "Hard Beans Etiopia",
-      productDescription: "6 oz bag",
-      quantity: 1,
-      price: "3.88",
-      src: "./../../images/hardbean.jpeg",
-    },
-    {
-      productName: "Johan & Nystrom Bourbon",
-      productDescription: "20 oz bag",
-      quantity: 2,
-      price: "41.98",
-      src: "./../../images/johan2.jpeg",
-    },
-  ];
+    let items = [
+        {
+            productName: "Johan & Nystrom Caravan",
+            productDescription: "20 oz bag",
+            quantity: 1,
+            price: "26.99",
+            src: "./../../images/johan.jpeg",
+        },
+        {
+            productName: "Illy Arabica",
+            productDescription: "Bestseller 18 oz bag",
+            quantity: 1,
+            price: "21.02",
+            src: "./../../images/illy_arabica.jpeg",
+        },
+        {
+            productName: "Hard Beans Etiopia",
+            productDescription: "6 oz bag",
+            quantity: 1,
+            price: "3.88",
+            src: "./../../images/hardbean.jpeg",
+        },
+        {
+            productName: "Johan & Nystrom Bourbon",
+            productDescription: "20 oz bag",
+            quantity: 2,
+            price: "41.98",
+            src: "./../../images/johan2.jpeg",
+        },
+    ];
 
-  let promotions = 0;
-  let grandTotal = 0;
-  let isError = false;
+    let promotions = 0;
+    let grandTotal = 0;
 
 
-  voucherValue.addEventListener('input', () => {
-    if (voucherValue.value === '') {
-    checkoutButton.innerHTML = 'Checkout'
-    grandTotalSpan.innerHTML = `$${(grandTotal + promotions).toFixed(2)}`;
-    allDiscountsSpan.innerHTML = 'n/a';
-    promotionHolder.innerHTML = '';
-    }
-  })
+    voucherValue.addEventListener("input", () => {
+        if (voucherValue.value === "") {
+            checkoutButton.innerHTML = "Checkout";
+            grandTotalSpan.innerHTML = `$${(grandTotal + promotions).toFixed(2)}`;
+            allDiscountsSpan.innerHTML = "n/a";
+            promotionHolder.innerHTML = "";
+        }
+    });
 
-  async function checkVoucherCode(voucherCode) {
-    if (items.reduce((a, b) => a + b.quantity, 0) === 0) {
-      promotionHolder.innerHTML = `<h5 id="error-message">No items in basket!</h5>`;
+    async function checkVoucherCode(voucherCode) {
+        if (items.reduce((a, b) => a + b.quantity, 0) === 0) {
+            promotionHolder.innerHTML = `<h5 id="error-message">No items in basket!</h5>`;
 
       return false;
     }
@@ -75,7 +74,6 @@ window.addEventListener("load", () => {
       body: JSON.stringify({ voucherCode }),
     });
     const data = await response.json();
-    console.log(data)
     if (data.message === "Voucher granted" && data.status === "success") {
       promotionHolder.innerHTML = null;
       return { amount: data.amount, campaign: data.campaign };
