@@ -75,6 +75,7 @@ window.addEventListener("load", () => {
       body: JSON.stringify({ voucherCode }),
     });
     const data = await response.json();
+    console.log(data)
     if (data.message === "Voucher granted" && data.status === "success") {
       promotionHolder.innerHTML = null;
       return { amount: data.amount, campaign: data.campaign };

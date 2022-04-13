@@ -39,6 +39,7 @@ app.post("/check-voucher", (req, res) => {
 
   client.validations.validateVoucher(voucherCode)
   .then(response => {
+    console.log(response)
     if (response.valid) {
       res.status(200).send({
         status: "success",
@@ -47,6 +48,7 @@ app.post("/check-voucher", (req, res) => {
         campaign: response.campaign ? response.campaign : null
       })
     } else {
+      console.log(response)
       res.status(404).send({
         status: "error",
         message: "Voucher incorrect"
@@ -54,6 +56,7 @@ app.post("/check-voucher", (req, res) => {
     }
   })
   .catch(() => {
+    console.log('err')
     res.send({
       status: "error",
       message: "Voucher incorrect"
