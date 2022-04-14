@@ -531,3 +531,11 @@ input::-webkit-inner-spin-button {
   background: #f0c4c4;
   border: 1px solid #732121;
 }
+
+.bad-request {
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  background-color: white;
+  color: black;
+}

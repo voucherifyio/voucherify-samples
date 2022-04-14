@@ -1,62 +1,62 @@
 window.addEventListener("load", () => {
-    const cartSummary = document.getElementById("cartSummary");
-    const checkoutButton = document.getElementById("checkout-button");
-    const promotionHolder = document.getElementById("promotion-holder");
-    const voucherValue = document.getElementById("voucherCode");
-    const buttonToCheckVoucherCode = document.getElementsByClassName("checkVoucherCode");
-    const buttonsToAddIncrement = document.getElementsByClassName("increment");
-    const buttonsToAddDecrement = document.getElementsByClassName("decrement");
-    const subtotal = document.querySelector("#subtotal-value");
-    const allDiscountsSpan = document.querySelector("#all-discounts-value");
-    const grandTotalSpan = document.querySelector("#grand-total-value");
+  const cartSummary = document.getElementById("cartSummary");
+  const checkoutButton = document.getElementById("checkout-button");
+  const promotionHolder = document.getElementById("promotion-holder");
+  const voucherValue = document.getElementById("voucherCode");
+  const buttonToCheckVoucherCode = document.getElementsByClassName("checkVoucherCode");
+  const buttonsToAddIncrement = document.getElementsByClassName("increment");
+  const buttonsToAddDecrement = document.getElementsByClassName("decrement");
+  const subtotal = document.querySelector("#subtotal-value");
+  const allDiscountsSpan = document.querySelector("#all-discounts-value");
+  const grandTotalSpan = document.querySelector("#grand-total-value");
 
-    let items = [
-        {
-            productName: "Johan & Nystrom Caravan",
-            productDescription: "20 oz bag",
-            quantity: 1,
-            price: "26.99",
-            src: "./../../images/johan.jpeg",
-        },
-        {
-            productName: "Illy Arabica",
-            productDescription: "Bestseller 18 oz bag",
-            quantity: 1,
-            price: "21.02",
-            src: "./../../images/illy_arabica.jpeg",
-        },
-        {
-            productName: "Hard Beans Etiopia",
-            productDescription: "6 oz bag",
-            quantity: 1,
-            price: "3.88",
-            src: "./../../images/hardbean.jpeg",
-        },
-        {
-            productName: "Johan & Nystrom Bourbon",
-            productDescription: "20 oz bag",
-            quantity: 2,
-            price: "41.98",
-            src: "./../../images/johan2.jpeg",
-        },
-    ];
+  let items = [
+    {
+      productName: "Johan & Nystrom Caravan",
+      productDescription: "20 oz bag",
+      quantity: 1,
+      price: "26.99",
+      src: "./images/johan2.jpeg",
+    },
+    {
+      productName: "Illy Arabica",
+      productDescription: "Bestseller 18 oz bag",
+      quantity: 1,
+      price: "21.02",
+      src: "./images/illy_arabica.jpeg",
+    },
+    {
+      productName: "Hard Beans Etiopia",
+      productDescription: "6 oz bag",
+      quantity: 1,
+      price: "3.88",
+      src: "./images/hardbean.jpeg",
+    },
+    {
+      productName: "Johan & Nystrom Bourbon",
+      productDescription: "20 oz bag",
+      quantity: 2,
+      price: "41.98",
+      src: "./images/johan2.jpeg",
+    },
+  ];
 
-    let promotions = 0;
-    let grandTotal = 0;
+  let promotions = 0;
+  let grandTotal = 0;
 
 
-    voucherValue.addEventListener("input", () => {
-        if (voucherValue.value === "") {
-            checkoutButton.innerHTML = "Checkout";
-            grandTotalSpan.innerHTML = `$${(grandTotal + promotions).toFixed(2)}`;
-            allDiscountsSpan.innerHTML = "n/a";
-            promotionHolder.innerHTML = "";
-        }
-    });
+  voucherValue.addEventListener("input", () => {
+    if (voucherValue.value === "") {
+      checkoutButton.innerHTML = "Checkout";
+      grandTotalSpan.innerHTML = `$${(grandTotal + promotions).toFixed(2)}`;
+      allDiscountsSpan.innerHTML = "n/a";
+      promotionHolder.innerHTML = "";
+    }
+  });
 
-    async function checkVoucherCode(voucherCode) {
-        if (items.reduce((a, b) => a + b.quantity, 0) === 0) {
-            promotionHolder.innerHTML = `<h5 id="error-message">No items in basket!</h5>`;
+  const checkVoucherCode = async (voucherCode) => {
+    if (items.reduce((a, b) => a + b.quantity, 0) === 0) {
+      promotionHolder.innerHTML = `<h5 id="error-message">No items in basket!</h5>`;
 
       return false;
     }
@@ -64,6 +64,7 @@ window.addEventListener("load", () => {
       promotionHolder.innerHTML = `<h5 id="error-message">Please enter voucher code!</h5>`;
       return false;
     }
+
     const response = await fetch(`/check-voucher`, {
       method: "POST",
       headers: {
@@ -74,17 +75,19 @@ window.addEventListener("load", () => {
       body: JSON.stringify({ voucherCode }),
     });
     const data = await response.json();
-    if (data.message === "Voucher granted" && data.status === "success") {
-      promotionHolder.innerHTML = null;
-      return { amount: data.amount, campaign: data.campaign };
+
+    if (response.status === 200) {
+      return { amount: data.amount, campaign: data.campaign }
     }
-    if (data.status === "error") {
-      promotionHolder.innerHTML = `<h5 id="error-message">Voucher code incorrect</h5>`;
-      return false;
+    if (response.status === 404) {
+      return Promise.reject(data)
+    }
+    if (response.status === 400) {
+      return Promise.reject(data)
     }
   }
 
-  async function redeemVoucherCode(voucherCode) {
+  const redeemVoucherCode = async (voucherCode) => {
     if (items.reduce((a, b) => a + b.quantity, 0) === 0) {
       promotionHolder.innerHTML = `<h5 id="error-message">No items in basket!</h5>`;
 
@@ -94,6 +97,7 @@ window.addEventListener("load", () => {
       promotionHolder.innerHTML = `<h5 id="error-message">Please enter voucher code!</h5>`;
       return false;
     }
+
     const response = await fetch(`/redeem-voucher`, {
       method: "POST",
       headers: {
@@ -103,33 +107,39 @@ window.addEventListener("load", () => {
       },
       body: JSON.stringify({ voucherCode }),
     });
+
     const data = await response.json();
-    if (data.message === "Voucher granted" && data.status === "success") {
-      promotionHolder.innerHTML = null;
-      return { amount: data.amount, campaign: data.campaign };
+    if (response.status === 200) {
+      return { amount: data.amount, campaign: data.campaign }
     }
-    if (data.status === "error") {
-      promotionHolder.innerHTML = `<h5 id="error-message">Voucher code incorrect</h5>`;
-      return false;
+
+    if (response.status === 404) {
+      return Promise.reject(data);
+    }
+
+    if (response.status === 400) {
+      return Promise.reject(data);
     }
   }
 
   checkoutButton.addEventListener("click", () => {
-    redeemVoucherCode(voucherValue.value).then(
-      (result) => {
-        if (result.amount) {
-          checkoutButton.innerHTML = `<p>Thank you!</p>`
-          promotions = result.amount / 100;
-          grandTotal = addProductPrices(items) - promotions;
-          grandTotalSpan.innerHTML = `$${grandTotal.toFixed(2)}`;
-          allDiscountsSpan.innerHTML = `-$${promotions.toFixed(2)}`;
-          promotionHolder.innerHTML = `<h5>${
-            result.campaign ? result.campaign : ''
-          }<span>-${promotions.toFixed(2)}$ OFF</span></h5>
+    redeemVoucherCode(voucherValue.value)
+      .then(
+        (result) => {
+          if (result.amount) {
+            checkoutButton.innerHTML = `<p>Thank you!</p>`
+            promotions = result.amount / 100;
+            grandTotal = addProductPrices(items) - promotions;
+            grandTotalSpan.innerHTML = `$${grandTotal.toFixed(2)}`;
+            allDiscountsSpan.innerHTML = `-$${promotions.toFixed(2)}`;
+            promotionHolder.innerHTML = `<h5>${result.campaign ? result.campaign : ''
+              }<span>-${promotions.toFixed(2)}$ OFF</span></h5>
             <span>-$${promotions.toFixed(2)}</span>`;
+          }
         }
-      }
-    )
+      ).catch(error => {
+        promotionHolder.innerHTML = `<h5 id="error-message">${error.message}</h5>`;
+      })
   });
 
   buttonToCheckVoucherCode[0].addEventListener("click", () => {
@@ -140,13 +150,14 @@ window.addEventListener("load", () => {
           grandTotal = addProductPrices(items) - promotions;
           grandTotalSpan.innerHTML = `$${grandTotal.toFixed(2)}`;
           allDiscountsSpan.innerHTML = `-$${promotions.toFixed(2)}`;
-          promotionHolder.innerHTML = `<h5>${
-            result.campaign ? result.campaign : ''
-          }<span>-${promotions.toFixed(2)}$ OFF</span></h5>
+          promotionHolder.innerHTML = `<h5>${result.campaign ? result.campaign : ''
+            }<span>-${promotions.toFixed(2)}$ OFF</span></h5>
           <span>-$${promotions.toFixed(2)}</span>`;
         }
       }
-    )
+    ).catch(error => {
+      promotionHolder.innerHTML = `<h5 id=error-message">${error.message}</h5>`
+    })
   });
 
   cartSummary.innerHTML = `<h2>Item summary (4)</h2> ${items
@@ -191,8 +202,8 @@ window.addEventListener("load", () => {
       .toFixed(2);
   }
 
-  function incrementQuantity(inde2) {
-    items[inde2].quantity = items[inde2].quantity + 1;
+  function incrementQuantity(index) {
+    items[index].quantity = items[index].quantity + 1;
     cartSummary.innerHTML = `<h2>Item summary (4)</h2> ${items
       .map(
         (item, index) =>
@@ -234,10 +245,10 @@ window.addEventListener("load", () => {
     }
   }
 
-  function decrementQuantity(inde2) {
-    if (items[inde2].quantity < 1) return;
+  function decrementQuantity(index) {
+    if (items[index].quantity < 1) return;
 
-    items[inde2].quantity = items[inde2].quantity - 1;
+    items[index].quantity = items[index].quantity - 1;
     cartSummary.innerHTML = `<h2>Item summary (4)</h2> ${items
       .map(
         (item, index) =>
