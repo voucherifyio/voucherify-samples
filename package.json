@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@voucherify/sdk": "^2.0.2",
+    "body-parser": "^1.20.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3"
   },
@@ -16,7 +17,7 @@
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix",
-    "git add"
+    "git add": ""
   },
   "scripts": {
     "prepare": "husky install"
