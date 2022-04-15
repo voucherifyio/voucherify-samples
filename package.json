@@ -16,8 +16,10 @@
     }
   },
   "lint-staged": {
-    "*.js": "eslint --cache --fix",
-    "git add": ""
+    "*.js": [
+      "eslint --fix",
+      "git add": ""
+    ]
   },
   "scripts": {
     "prepare": "husky install"
