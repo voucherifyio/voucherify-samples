@@ -38,7 +38,7 @@
     <h2>Your cart</h2>
     <div class="cart-and-summary-holder">
       <section
-        id="cartSummary"
+        id="cart-summary"
         class="cartSummary"
         data-component="cartSummary"
       >
@@ -47,18 +47,18 @@
       <section class="orderSummary" data-component="orderSummary">
         <h2>Order summary</h2>
         <div class="total-order-holder">
-          <h4>Subtotal<span id="subtotal-value">$135.85</span></h4>
+          <h4>Subtotal<span id="subtotal">$135.85</span></h4>
           <h4>Shipping<span>Calculated at next step</span></h4>
           <h4>Coupon Codes:</h4>
           <div class="voucher-input-and-button-holder">
             <form>
               <input
-                id="voucherCode"
+                id="voucher-code"
                 type="text"
                 placeholder="Enter code your"
               />
             </form>
-            <button class="checkVoucherCode"><img src="./images/rightArrow.svg" alt="Right Arrow"></button>
+            <button id="check-voucher-code"><img src="./images/rightArrow.svg" alt="Right Arrow"></button>
           </div>
           <div class="promotions-holder">
             <h4>Promotions:</h4>
@@ -66,9 +66,9 @@
             </div>
           </div>
           <h4 class="discount-price-holder">
-            All Your Discounts:<span id="all-discounts-value">n/a</span>
+            All Your Discounts:<span id="all-discounts">n/a</span>
           </h4>
-          <h4>Grand total:<span id="grand-total-value">$135.85</span></h4>
+          <h4>Grand total:<span id="grand-total">$135.85</span></h4>
         </div>
         <button id="checkout-button" class="checkout-button">Checkout</button>
       </section>

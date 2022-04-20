@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
 });
 
 
-app.post("/check-voucher", (req, res) => {
+app.post("/validate-voucher", (req, res) => {
   const voucherCode = req.body.voucherCode;
   if (!voucherCode) {
     return res.send({
