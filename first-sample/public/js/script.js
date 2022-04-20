@@ -128,7 +128,7 @@ window.addEventListener("load", () => {
             grandTotalSpan.innerHTML = `$${grandTotal.toFixed(2)}`;
             allDiscountsSpan.innerHTML = `-$${promotions.toFixed(2)}`;
             promotionHolder.innerHTML = `<h5>${result.campaign ? result.campaign : ''
-              }<span>-${promotions.toFixed(2)}$ OFF</span></h5>;
+              }<span>-${promotions.toFixed(2)}$ OFF</span></h5>
             <span>-$${promotions.toFixed(2)}</span>`;
   }
 
