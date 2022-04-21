@@ -7,6 +7,8 @@ To see all the possibilities offered by the Voucherify product, go [here](https:
 
 If you want to read all the documentation regarding Voucherify, click [here](https://docs.voucherify.io/docs).
 
+![](https://gifyu.com/image/SLFLU)
+
 See the sample of the integration live.
 
 ## How to run Voucherify samples locally?
