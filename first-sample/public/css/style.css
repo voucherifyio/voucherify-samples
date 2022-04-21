@@ -197,27 +197,6 @@ input::-webkit-inner-spin-button {
   color: #222;
 }
 
-.navbar {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-}
-
-.navbar-list-holder {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  list-style-type: none;
-  gap: 30px;
-  font-weight: 600;
-  font-size: 18px;
-  line-height: 21px;
-  color: #001246;
-}
-
 .shop-logo {
   height: 100%;
 }

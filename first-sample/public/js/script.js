@@ -3,9 +3,7 @@ window.addEventListener("load", () => {
   const checkoutButton = document.getElementById("checkout-button");
   const promotionHolder = document.getElementById("promotion-holder");
   const voucherValue = document.getElementById("voucher-code");
-  const buttonToCheckVoucherCode = document.getElementById("check-voucher-code");
-  const buttonsToAddIncrement = document.getElementsByClassName("increment");
-  const buttonsToAddDecrement = document.getElementsByClassName("decrement");
+  const buttonValidateCode = document.getElementById("check-voucher-code");
   const subtotal = document.getElementById("subtotal");
   const allDiscountsSpan = document.getElementById("all-discounts");
   const grandTotalSpan = document.getElementById("grand-total");
@@ -44,6 +42,74 @@ window.addEventListener("load", () => {
   let promotions = 0;
   let grandTotal = 0;
 
+  const summaryInnerText = () => {
+    cartSummary.innerHTML = `<h2>Item summary (4)</h2> ${items
+      .map(
+        (item, index) =>
+          `<div class='item' key=${index}>
+                      <img src='${item.src}' alt="product ${item.productName}"/>
+                      <div class='name-and-description'>
+                        <span>${item.productName}</span>
+                        <span>${item.productDescription}</span>
+                      </div>
+                      <div class="form-and-button-holder">
+                        <button class='decrement' id="decrementQuantity-${index}">-</button>
+                        <form>
+                        <input class='increment-input' type="number" value="${item.quantity}"/>
+                        </form>
+                        <button class='increment' id="incrementQuantity-${index}">+</button>
+                      </div>
+                      <span class="price">$${item.price}</span>
+                      <button class="remove-button">Remove</button>
+                     </div>`
+      )
+      .join("")}`;
+  }
+
+  summaryInnerText();
+
+  const incrementQuantity = () => {
+    const incrementButtons = document.querySelectorAll('.increment');
+    const incrementInput = document.querySelectorAll('.increment-input');
+    incrementButtons.forEach((button, index) => {
+      button.addEventListener('click', () => {
+        items[index].quantity = items[index].quantity + 1;
+        incrementInput[index].value = items[index].quantity;
+        summaryPrices();
+      })
+    })
+  }
+  incrementQuantity();
+
+  const decrementQuantity = () => {
+    const decrementButtons = document.querySelectorAll('.decrement');
+    const incrementInput = document.querySelectorAll('.increment-input');
+    decrementButtons.forEach((button, index) => {
+      button.addEventListener('click', () => {
+        if (items[index].quantity < 1) return;
+        items[index].quantity = items[index].quantity - 1;
+        incrementInput[index].value = items[index].quantity;
+        summaryPrices();
+      })
+    })
+  }
+  decrementQuantity();
+
+  function addProductPrices(items) {
+    return items
+      .map((item) => {
+        return parseFloat(item.price) * parseInt(item.quantity);
+      })
+      .reduce((partialSum, a) => partialSum + a, 0)
+      .toFixed(2);
+  }
+
+  const summaryPrices = () => {
+    const summedUpPrices = addProductPrices(items);
+    subtotal.innerHTML = `$${summedUpPrices}`;
+    grandTotal = summedUpPrices - promotions;
+    grandTotalSpan.innerHTML = `$${grandTotal.toFixed(2)}`;
+  }
 
   voucherValue.addEventListener("input", () => {
     if (voucherValue.value === "") {
@@ -87,7 +153,7 @@ window.addEventListener("load", () => {
     }
   }
 
-  const redeemVoucherCode = async (voucherCode) => {
+  const redeemCode = async (voucherCode) => {
     if (items.reduce((a, b) => a + b.quantity, 0) === 0) {
       promotionHolder.innerHTML = `<h5 id="error-message">No items in basket</h5>`;
       return false;
@@ -133,7 +199,7 @@ window.addEventListener("load", () => {
   }
 
   checkoutButton.addEventListener("click", () => {
-    redeemVoucherCode(voucherValue.value)
+    redeemCode(voucherValue.value)
       .then(
         (result) => {
           if (result.amount) {
@@ -146,7 +212,7 @@ window.addEventListener("load", () => {
       })
   });
 
-  buttonToCheckVoucherCode.addEventListener("click", () => {
+  buttonValidateCode.addEventListener("click", () => {
     validateCode(voucherValue.value).then(
       (result) => {
         if (result.amount) {
@@ -157,77 +223,4 @@ window.addEventListener("load", () => {
       promotionHolder.innerHTML = `<h5 id=error-message">${error.message}</h5>`;
     })
   });
-
-  const summaryInnerText = () => {
-    cartSummary.innerHTML = `<h2>Item summary (4)</h2> ${items
-      .map(
-        (item, index) =>
-          `<div class='item' key=${index}>
-                      <img src='${item.src}' alt="product ${item.productName}"/>
-                      <div class='name-and-description'>
-                        <span>${item.productName}</span>
-                        <span>${item.productDescription}</span>
-                      </div>
-                      <div class="form-and-button-holder">
-                        <button class='decrement' id="decrementQuantity-${index}">-</button>
-                        <form>
-                        <input type="number" value="${item.quantity}"/>
-                        </form>
-                        <button class='increment' id="incrementQuantity-${index}">+</button>
-                      </div>
-                      <span class="price">$${item.price}</span>
-                      <button class="remove-button">Remove</button>
-                     </div>`
-      )
-      .join("")}`;
-  }
-
-  summaryInnerText();
-
-  const incrementOrDecrement = (incrementButton, decrementButton) => {
-    for (let i = 0; i < incrementButton.length; i++) {
-      incrementButton[i].addEventListener("click", () =>
-        incrementQuantity(i)
-      );
-    }
-    for (let i = 0; i < decrementButton.length; i++) {
-      decrementButton[i].addEventListener("click", () =>
-        decrementQuantity(i)
-      );
-    }
-  }
-
-  incrementOrDecrement(buttonsToAddIncrement, buttonsToAddDecrement);
-
-  function addProductPrices(items) {
-    return items
-      .map((item) => {
-        return parseFloat(item.price) * parseInt(item.quantity);
-      })
-      .reduce((partialSum, a) => partialSum + a, 0)
-      .toFixed(2);
-  }
-
-  const summaryPrices = () => {
-    const summedUpPrices = addProductPrices(items);
-    subtotal.innerHTML = `$${summedUpPrices}`;
-    grandTotal = summedUpPrices - promotions;
-    grandTotalSpan.innerHTML = `$${grandTotal.toFixed(2)}`;
-  }
-
-  const incrementQuantity = (index) => {
-    items[index].quantity = items[index].quantity + 1;
-    summaryInnerText();
-    summaryPrices();
-    incrementOrDecrement(buttonsToAddIncrement, buttonsToAddDecrement);
-
-  }
-
-  const decrementQuantity = (index) => {
-    if (items[index].quantity < 1) return;
-    items[index].quantity = items[index].quantity - 1;
-    summaryInnerText();
-    summaryPrices();
-    incrementOrDecrement(buttonsToAddIncrement, buttonsToAddDecrement);
-  }
 });
