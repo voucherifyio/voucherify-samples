@@ -65,7 +65,6 @@ window.addEventListener("load", () => {
       )
       .join("")}`;
   }
-
   summaryInnerText();
 
   const incrementQuantity = () => {
