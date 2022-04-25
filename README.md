@@ -7,7 +7,7 @@ To see all the possibilities offered by the Voucherify product, go [here](https:
 
 If you want to read all the documentation regarding Voucherify, click [here](https://docs.voucherify.io/docs).
 <p align="center">
-![](https://github.com/voucherifyio/voucherify-samples/blob/first-sample/demo.gif)
+  <img src="https://github.com/voucherifyio/voucherify-samples/blob/first-sample/demo.gif" />
 </p>
 
 
