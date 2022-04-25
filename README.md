@@ -6,8 +6,9 @@ Voucherify examples allow you to see and inspire you how to use Voucherify API t
 To see all the possibilities offered by the Voucherify product, go [here](https://docs.voucherify.io/docs/checking-eligibility-for-coupons).
 
 If you want to read all the documentation regarding Voucherify, click [here](https://docs.voucherify.io/docs).
-
+<center>
 ![](https://github.com/voucherifyio/voucherify-samples/blob/first-sample/demo.gif)
+</center>
 
 See the sample of the integration live.
 
