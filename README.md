@@ -1,7 +1,7 @@
 # Voucherify API Samples
 ## UI Checkout Sample
 
-Voucherify examples allow you to see and inspire you how to use Voucherify API to build your own promotional configurations.
+<i class="fa-duotone fa-alien"></i>Voucherify examples allow you to see and inspire you how to use Voucherify API to build your own promotional configurations.
 
 To see all the possibilities offered by the Voucherify product, go [here](https://docs.voucherify.io/docs/checking-eligibility-for-coupons).
 
